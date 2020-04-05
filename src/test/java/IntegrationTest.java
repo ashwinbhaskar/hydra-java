@@ -1,8 +1,9 @@
-import client.HydraClient;
+import com.hydra.client.HydraClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import error.HydraException;
-import model.HydraResponse;
-import model.Row;
+import com.hydra.Factory;
+import com.hydra.error.HydraException;
+import com.hydra.model.HydraResponse;
+import com.hydra.model.Row;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -173,6 +174,51 @@ public class IntegrationTest {
             collector.checkThat(true, equalTo(itemsContains(items, item3)));
 
             collector.checkThat("$205,000", equalTo(recognizedText.get("Total Amount Owed")));
+        } catch(HydraException e) {
+            fail("Failed with exception " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void sideWays1Test() throws URISyntaxException, JsonProcessingException {
+        HydraClient client = Factory.newHydraClient(apiKey, dataSourceId);
+        URL resourceUrl = getClass().getClassLoader().getResource("sideways-1.png");
+        File file = Paths.get(resourceUrl.toURI()).toFile();
+        String[] filePaths = {file.getAbsolutePath()};
+
+        try {
+            HydraResponse hydraResponse = client.recognize(filePaths);
+            assertEquals(1, hydraResponse.getRows().size());
+            Row row = hydraResponse.getRows().get(0);
+            assertEquals("", row.getError());
+            assertEquals(0, row.getFileIndex());
+            Map<String ,Object> recognizedText = row.getRecognizedText();
+
+            collector.checkThat("Nordic Airways, Inc.", equalTo(recognizedText.get("Customer")));
+            collector.checkThat("456 Viking Lane\nOslo, MN 23456", equalTo(recognizedText.get("Address")));
+            collector.checkThat("2020/01/19", equalTo(recognizedText.get("Expiry Date")));
+            collector.checkThat("2019/12/19", equalTo(recognizedText.get("Date Issued")));
+
+            System.out.println("purchases item = " + recognizedText.get("Purchased Items"));
+            List<Map<String, String>> items = (List<Map<String ,String>>) recognizedText.get("Purchased Items");
+
+            collector.checkThat(2, equalTo(items.size()));
+            Map<String, String> item1 = new HashMap<String, String>() {{
+                put("Item", "In-flight entertainment system");
+                put("Price", "$500");
+                put("Quantity", "500");
+                put("Total", "$250,000");
+            }};
+            Map<String, String> item2 = new HashMap<String, String>(){{
+                put("Item", "Cockpit Displays");
+                put("Price", "$2,000");
+                put("Quantity", "20");
+                put("Total", "$40,000");
+            }};
+            collector.checkThat(true, equalTo(itemsContains(items, item1)));
+            collector.checkThat(true, equalTo(itemsContains(items, item2)));
+
+            collector.checkThat("$290,000", equalTo(recognizedText.get("Total Amount Owed")));
         } catch(HydraException e) {
             fail("Failed with exception " + e.getMessage());
         }

@@ -1,6 +1,5 @@
-package client;
+package com.hydra.client;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public interface FileContentReader {

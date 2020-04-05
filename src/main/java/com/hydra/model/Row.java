@@ -1,4 +1,4 @@
-package model;
+package com.hydra.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -39,7 +39,7 @@ public class Row {
     @Override
     public String toString() {
         return "Row{" +
-                "error='" + error + '\'' +
+                "com.hydra.error='" + error + '\'' +
                 ", fileIndex=" + fileIndex +
                 ", recognizedText=" + recognizedText +
                 '}';

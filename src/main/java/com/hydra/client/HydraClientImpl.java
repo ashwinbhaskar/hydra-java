@@ -1,10 +1,10 @@
-package client;
+package com.hydra.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import error.HydraException;
-import model.FileContent;
-import model.HydraRequest;
-import model.HydraResponse;
+import com.hydra.error.HydraException;
+import com.hydra.model.FileContent;
+import com.hydra.model.HydraRequest;
+import com.hydra.model.HydraResponse;
 import okhttp3.*;
 
 import java.io.IOException;

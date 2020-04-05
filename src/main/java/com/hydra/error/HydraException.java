@@ -1,4 +1,4 @@
-package error;
+package com.hydra.error;
 
 public class HydraException extends Exception {
 

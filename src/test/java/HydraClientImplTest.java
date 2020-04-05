@@ -1,10 +1,10 @@
-import client.FileContentReader;
-import client.HydraClientImpl;
+import com.hydra.client.FileContentReader;
+import com.hydra.client.HydraClientImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import error.HydraException;
+import com.hydra.error.HydraException;
 import io.javalin.Javalin;
-import model.HydraResponse;
-import model.Row;
+import com.hydra.model.HydraResponse;
+import com.hydra.model.Row;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
-@RunWith(JUnit4.class)
 public class HydraClientImplTest {
     private String validAuthorizationKey = "12345678-1234-1234-1234-123412341234";
     private String validDataSourceId = "my_data_source";

@@ -1,4 +1,4 @@
-package client;
+package com.hydra.client;
 
 import java.io.IOException;
 import java.nio.file.Files;
