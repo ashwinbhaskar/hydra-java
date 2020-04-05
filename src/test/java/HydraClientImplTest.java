@@ -1,3 +1,5 @@
+import client.FileContentReader;
+import client.HydraClientImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import error.HydraException;
 import io.javalin.Javalin;
@@ -88,7 +90,7 @@ public class HydraClientImplTest {
 
     @Test
     public void shouldCallTheCorrectAPIAndGetResponseHappyPath() throws IOException, HydraException {
-        Map<String, String> expectedRecognizedText = new HashMap<String, String>() {
+        Map<String, Object> expectedRecognizedText = new HashMap<String, Object>() {
             {
                 put("field1", "value1");
                 put("field2", "value2");
