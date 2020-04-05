@@ -1,4 +1,5 @@
-import java.io.FileNotFoundException;
+package client;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

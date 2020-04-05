@@ -1,10 +1,14 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
+package client;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import error.HydraException;
 import model.FileContent;
+import model.HydraRequest;
 import model.HydraResponse;
 import okhttp3.*;
+
 import java.io.IOException;
+import java.time.Duration;
 import java.util.*;
 
 public class HydraClientImpl implements HydraClient {
@@ -17,7 +21,10 @@ public class HydraClientImpl implements HydraClient {
     private FileContentReader fileContentReader;
 
     public HydraClientImpl(String authorizationKey, String dataSourceId, FileContentReader fileContentReader) {
-        httpClient = new OkHttpClient();
+        httpClient = new OkHttpClient.Builder()
+                .connectTimeout(Duration.ofSeconds(20))
+                .readTimeout(Duration.ofSeconds(20))
+                .build();
         objectMapper = new ObjectMapper();
         this.dataSourceId = dataSourceId;
         this.authorizationKey = authorizationKey;
@@ -38,27 +45,30 @@ public class HydraClientImpl implements HydraClient {
 
     private HydraResponse recognize(int retryCount, String... filePaths) throws HydraException {
         validateFiles(filePaths);
-        ArrayList<FileContent> requestBody;
+        ArrayList<FileContent> fileContents;
         try {
-            requestBody = new ArrayList<>(toFileContents(filePaths));
+            fileContents = new ArrayList<>(toFileContents(filePaths));
         } catch (IOException e) {
             throw new HydraException(e.getMessage());
         }
         try {
-            RequestBody body = RequestBody.create(objectMapper.writeValueAsBytes(requestBody), MediaType.parse("application/json"));
+            HydraRequest hydraRequest = new HydraRequest(fileContents);
+            RequestBody body = RequestBody.create(objectMapper.writeValueAsBytes(hydraRequest), MediaType.parse("application/json"));
             String recognizePath = "/api/hydra/";
             Request request = new Request.Builder()
-                    .url(getHost() + recognizePath + dataSourceId)
+                    .url(getHost() + recognizePath + dataSourceId + "/")
                     .addHeader("Authorization", "Basic " + authorizationKey)
                     .post(body)
                     .build();
             Response response = httpClient.newCall(request).execute();
             int statusCode = response.code();
             if (statusCode == 200) {
+                //System.out.println("response string = "+ response.body().string());
                 return objectMapper.readValue(response.body().bytes(), HydraResponse.class);
-            } if(statusCode >= 500 && statusCode <=599 && retryCount > 3) {
+            }
+            if (statusCode >= 500 && statusCode <= 599 && retryCount > 3) {
                 return recognize(retryCount - 1, filePaths);
-            }else {
+            } else {
                 throw new HydraException("Something went wrong.\n Status Code =  " + response.code());
             }
         } catch (Exception e) {
@@ -97,6 +107,6 @@ public class HydraClientImpl implements HydraClient {
 
     private String getHost() {
         String env = System.getProperty("environment");
-        return env.equals("test") ? "http://localhost" : "https://siftrics.com";
+        return env != null && env.equals("test") ? "http://localhost" : "https://siftrics.com";
     }
 }

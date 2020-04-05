@@ -1,3 +1,5 @@
+package client;
+
 import error.HydraException;
 import model.HydraResponse;
 
