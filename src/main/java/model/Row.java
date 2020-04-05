@@ -13,12 +13,12 @@ public class Row {
     @JsonProperty("FileIndex")
     private int fileIndex;
     @JsonProperty("RecognizedText")
-    private Map<String, String> recognizedText;
+    private Map<String, Object> recognizedText;
 
     public Row() {
     }
 
-    public Row(String error, int fileIndex, Map<String, String> recognizedText) {
+    public Row(String error, int fileIndex, Map<String, Object> recognizedText) {
         this.error = error;
         this.fileIndex = fileIndex;
         this.recognizedText = recognizedText;
@@ -32,7 +32,7 @@ public class Row {
         return fileIndex;
     }
 
-    public Map<String ,String> getRecognizedText() {
+    public Map<String ,Object> getRecognizedText() {
         return recognizedText;
     }
 
