@@ -107,6 +107,6 @@ public class HydraClientImpl implements HydraClient {
 
     private String getHost() {
         String env = System.getProperty("environment");
-        return env != null && env.equals("test") ? "http://localhost" : "https://siftrics.com";
+        return env != null && env.equals("test") ? "http://localhost:3059" : "https://siftrics.com";
     }
 }

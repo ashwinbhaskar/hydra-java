@@ -38,7 +38,7 @@ public class HydraClientImplTest {
 
     @Before
     public void beforeTest() {
-        app.start(80);
+        app.start(3059);
     }
 
     @After
