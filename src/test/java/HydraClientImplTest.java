@@ -117,4 +117,27 @@ public class HydraClientImplTest {
         verify(fileContentReader, times(2)).fileToBase64(any());
     }
 
+    @Test
+    public void shouldThrowAHydraExceptionWhenServerReturns4XXErrorCode() throws IOException, HydraException {
+
+        FileContentReader fileContentReader = Mockito.mock(FileContentReader.class);
+        when(fileContentReader.fileToBase64(Mockito.any())).thenReturn("qweretosdfsdf==");
+        HydraClientImpl hydraClient = new HydraClientImpl(validAuthorizationKey, validDataSourceId, fileContentReader);
+
+        app.post("/api/hydra/" + validDataSourceId, ctx -> {
+            String auth = ctx.req.getHeader("Authorization");
+            assertEquals("Basic "+validAuthorizationKey, auth);
+            ctx.status(401).result("Forbidden");
+        });
+        String[] files = {"users/foo.bmp", "users/bax.pdf"};
+        try {
+            HydraResponse actualResponse = hydraClient.recognize(files);
+            fail("Should not happen");
+        }catch (HydraException e) {
+            assertEquals("Something went wrong.\n Status Code =  401", e.getMessage());
+        }
+
+        verify(fileContentReader, times(2)).fileToBase64(any());
+    }
+
 }
