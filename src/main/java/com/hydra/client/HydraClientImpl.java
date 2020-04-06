@@ -40,7 +40,7 @@ public class HydraClientImpl implements HydraClient {
 
     @Override
     public HydraResponse recognize(String... filePaths) throws HydraException {
-        return recognize(3, filePaths);
+        return recognize(2, filePaths);
     }
 
     private HydraResponse recognize(int retryCount, String... filePaths) throws HydraException {
@@ -66,7 +66,7 @@ public class HydraClientImpl implements HydraClient {
                 //System.out.println("response string = "+ response.body().string());
                 return objectMapper.readValue(response.body().bytes(), HydraResponse.class);
             }
-            if (statusCode >= 500 && statusCode <= 599 && retryCount > 3) {
+            if (statusCode >= 500 && statusCode <= 599 && retryCount > 0) {
                 return recognize(retryCount - 1, filePaths);
             } else {
                 throw new HydraException("Something went wrong.\n Status Code =  " + response.code());
