@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -136,6 +137,32 @@ public class HydraClientImplTest {
         }
 
         verify(fileContentReader, times(2)).fileToBase64(any());
+    }
+
+    @Test
+    public void shouldThrowAHydraExceptionWhenServerReturns5XXErrorCodeAfterExhaustingRetries() throws IOException, HydraException {
+
+        FileContentReader fileContentReader = Mockito.mock(FileContentReader.class);
+        when(fileContentReader.fileToBase64(Mockito.any())).thenReturn("qweretosdfsdf==");
+        HydraClientImpl hydraClient = new HydraClientImpl(validAuthorizationKey, validDataSourceId, fileContentReader);
+
+        AtomicInteger count = new AtomicInteger();
+        app.post("/api/hydra/" + validDataSourceId, ctx -> {
+            count.getAndIncrement();
+            String auth = ctx.req.getHeader("Authorization");
+            assertEquals("Basic "+validAuthorizationKey, auth);
+            ctx.status(500).result("Internal server error");
+        });
+        String[] files = {"users/foo.bmp", "users/bax.pdf"};
+        try {
+            HydraResponse actualResponse = hydraClient.recognize(files);
+            fail("Should not happen");
+        }catch (HydraException e) {
+            assertEquals("Something went wrong.\n Status Code =  500", e.getMessage());
+        }
+
+        verify(fileContentReader, times(6)).fileToBase64(any());
+        assertEquals(3, count.get());
     }
 
 }
