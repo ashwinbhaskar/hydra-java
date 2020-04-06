@@ -4,6 +4,7 @@ Java client for [Hydra](https://siftrics.com/docs/hydra.html) APIs
 
 # Usage
 
+#### Java
 ```
 import com.hydra.Factory;
 import com.hydra.client.HydraClient;
@@ -20,3 +21,33 @@ try {
 }
 ```
 
+#### Scala
+
+```
+import com.hydra.Factory
+import com.hydra.model.HydraResponse
+import scala.util.{Failure, Success, Try}
+
+val client = Factory.newHydraClient("api-key", "data-source-id")
+val files = Seq("/users/johndoe/invoice.pdf")
+
+val response: Try[HydraResponse] = Try(client.recognize(files:_*))
+response match {
+  case Success(response) => //do something
+  case Failure(exception) => //do something
+}
+```
+
+#### Clojure
+
+```
+(defn recognize []
+  (let [api-key "api-key"
+        data-source "data-source-id"
+        client (Factory/newHydraClient api-key data-source)
+        files ["/Users/johndor/invoice.pdf"]]
+    (try
+      (.recognize client (into-array files))
+      (catch HydraException e
+        e))))
+```
