@@ -1,13 +1,11 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hydra.client.FileContentReader;
 import com.hydra.client.HydraClientImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hydra.error.HydraException;
-import io.javalin.Javalin;
 import com.hydra.model.HydraResponse;
 import com.hydra.model.Row;
+import io.javalin.Javalin;
 import org.junit.*;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 
 import java.io.IOException;
