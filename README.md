@@ -1,4 +1,4 @@
-# hydra-java
+# hydra-java [![codecov](https://codecov.io/gh/ashwinbhaskar/hydra-java/branch/master/graph/badge.svg)](https://codecov.io/gh/ashwinbhaskar/hydra-java)
 
 Java client for [Hydra](https://siftrics.com/docs/hydra.html) APIs
 
