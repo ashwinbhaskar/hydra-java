@@ -73,6 +73,7 @@ public class IntegrationTest {
 
             collector.checkThat("$205,000", equalTo(recognizedText.get("Total Amount Owed")));
         } catch(HydraException e) {
+            System.out.println(e.toString());
             fail("Failed with exception " + e.getMessage());
         }
     }
@@ -124,6 +125,7 @@ public class IntegrationTest {
 
             collector.checkThat("$205,000", equalTo(recognizedText.get("Total Amount Owed")));
         } catch(HydraException e) {
+            System.out.println(e.toString());
             fail("Failed with exception " + e.getMessage());
         }
     }
@@ -175,6 +177,7 @@ public class IntegrationTest {
 
             collector.checkThat("$205,000", equalTo(recognizedText.get("Total Amount Owed")));
         } catch(HydraException e) {
+            System.out.println(e.toString());
             fail("Failed with exception " + e.getMessage());
         }
     }
@@ -220,6 +223,7 @@ public class IntegrationTest {
 
             collector.checkThat("$290,000", equalTo(recognizedText.get("Total Amount Owed")));
         } catch(HydraException e) {
+            System.out.println(e.toString());
             fail("Failed with exception " + e.getMessage());
         }
     }
